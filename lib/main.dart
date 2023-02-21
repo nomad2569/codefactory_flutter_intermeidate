@@ -1,4 +1,5 @@
 import 'package:codefactory_intermediate/common/component/custom_text_form.dart';
+import 'package:codefactory_intermediate/common/view/splash_screen.dart';
 import 'package:codefactory_intermediate/user/view/login_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +18,7 @@ class _App extends StatelessWidget {
       theme: ThemeData(fontFamily: 'NotoSans'),
       // 우측 상단 debug 배너 없애기
       debugShowCheckedModeBanner: false,
-      home: LoginScreen(),
+      home: SplashScreen(),
     );
   }
 }
