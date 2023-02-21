@@ -50,8 +50,10 @@ class CustomTextFormField extends StatelessWidget {
           fillColor: INPUT_BG_COLOR,
           // 배경색 적용 or 적용하지 않기
           filled: true,
-          // 모든 상태의 스타일 세팅
+          // 모든 상태의 보더 스타일 세팅
           border: baseBorder,
+          // 선택전의 보더 스타일 세팅
+          enabledBorder: baseBorder,
           // input box 선택했을 때 스타일 세팅
           // `copyWith` 으로 기존 baseBorder 의 값들 오버라이딩
           focusedBorder: baseBorder.copyWith(
