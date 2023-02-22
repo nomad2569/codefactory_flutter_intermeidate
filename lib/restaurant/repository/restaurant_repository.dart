@@ -1,4 +1,6 @@
-import 'package:dio/dio.dart';
+import 'package:codefactory_intermediate/common/model/cursor_pagination_model.dart';
+import 'package:codefactory_intermediate/restaurant/model/restaurant_model.dart';
+import 'package:dio/dio.dart' hide Headers;
 import 'package:retrofit/retrofit.dart';
 
 import '../../common/const/data.dart';
@@ -16,13 +18,20 @@ abstract class RestaurantRepository {
   // ---- dio, baseUrl 의 역할이 무엇인지는 알아야 함
 
   // abstract class 이므로, 실제 함수의 body 를 작성하지는 않음.
+  // 작성해야할 것은 오직
+  // 1. 요청에 필요한 정보들 (Headers...)
+  // 2. 반환될 Model (단, response 의 구조와 `완벽히` 같아야함)
 
   // GET http:$baseIp:$basePort/restaurant/
   @GET('/')
-  paginate();
+  // dio interceptor 에서 미리 정해둔 syntax
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<CursorPagination<RestaurantModel>> paginate();
 
   // GET http:$baseIp:$basePort/restaurant/:id
   // path 변수 : id
-  @GET('/{id}')
-  getRestaurantDetail();
+  // @GET('/{id}')
+  // getRestaurantDetail();
 }

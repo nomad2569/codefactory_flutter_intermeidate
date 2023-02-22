@@ -40,7 +40,6 @@ class RestaurantModel {
     return 'http://$baseIp:$basePort$thumbUrl';
   }
 
-  factory RestaurantModel.fromJSON(
-          {required final Map<String, dynamic> json}) =>
+  factory RestaurantModel.fromJson(final Map<String, dynamic> json) =>
       _$RestaurantModelFromJson(json);
 }
