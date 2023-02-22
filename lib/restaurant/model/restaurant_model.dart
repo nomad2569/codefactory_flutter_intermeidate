@@ -37,7 +37,7 @@ class RestaurantModel {
   });
 
   static pathConcatThumbUrl(String thumbUrl) {
-    return 'http://$baseIp$basePort$thumbUrl';
+    return 'http://$baseIp:$basePort$thumbUrl';
   }
 
   factory RestaurantModel.fromJSON(
