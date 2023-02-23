@@ -7,15 +7,18 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SplashScreen extends StatefulWidget {
+import '../secure_storage/secure_storage.dart';
+
+class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends ConsumerState<SplashScreen> {
   // API 호출을 위한 dio 활성화
   final dio = Dio();
 
@@ -30,10 +33,12 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void deleteToken() async {
+    final storage = ref.read(secureStorageProvider);
     await storage.deleteAll();
   }
 
   void checkToken() async {
+    final storage = ref.read(secureStorageProvider);
     final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
     final refreshToken = await storage.read(key: REFRESH_TOKEN_KEY);
     try {

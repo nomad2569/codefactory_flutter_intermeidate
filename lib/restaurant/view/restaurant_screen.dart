@@ -7,40 +7,30 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class RestaurantScreen extends StatelessWidget {
+import '../../common/model/cursor_pagination_model.dart';
+
+class RestaurantScreen extends ConsumerWidget {
   const RestaurantScreen({super.key});
 
-  Future<List<RestaurantModel>> PaginateRestaurant() async {
-    final dio = Dio();
-
-    dio.interceptors.add(CustomInterceptor(
-      storage: storage,
-    ));
-
-    final res = await RestaurantRepository(dio,
-            baseUrl: 'http://$baseIp:$basePort/restaurant')
-        .paginate();
-
-    return res.data;
-  }
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final restaurantRepository = ref.watch(RestaurantRepositoryProvider);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: FutureBuilder<List<RestaurantModel>>(
-        future: PaginateRestaurant(),
-        builder: (context, AsyncSnapshot<List<RestaurantModel>> snapshot) {
+      child: FutureBuilder<CursorPagination<RestaurantModel>>(
+        future: ref.watch(RestaurantRepositoryProvider).paginate(),
+        builder: (context,
+            AsyncSnapshot<CursorPagination<RestaurantModel>> snapshot) {
           // 데이터가 없으면 빈 화면 출력
           if (!snapshot.hasData) {
-            return Container();
+            return CircularProgressIndicator();
           }
-
           return ListView.separated(
-            itemCount: snapshot.data!.length,
+            itemCount: snapshot.data!.data.length,
             itemBuilder: (_, index) {
-              final item = snapshot.data![index];
+              final item = snapshot.data!.data[index];
               // repo 결과인 Model 을 기반으로 RestaurantCard 생성
               return RestaurantCard.fromModel(restaurantModel: item);
             },
