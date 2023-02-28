@@ -17,22 +17,38 @@ class RestaurantScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final data = ref.watch(restaurantStateProvider);
     /* 
     - restaurantStateProvider
       - RestaurantStateNotifier
         - RestaurantRepositoryProvider (retrofit: `RestaurantRepository`)
           - dioProvider, storageProvider
     */
-    if (data.length == 0) {
-      return Center(child: CircularProgressIndicator());
+    final data = ref.watch(restaurantStateProvider);
+
+    // data 가 로딩중이라면 (첫 로딩)
+    if (data is CursorPaginationLoading) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
     }
+
+    // 에러
+    if (data is CursorPaginationError) {
+      return Center(
+        child: Text(data.message),
+      );
+    }
+
+    if (data is CursorPagination) {}
+
+    final cp = data as CursorPagination;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: ListView.separated(
-        itemCount: data.length,
+        itemCount: cp.data.length,
         itemBuilder: (_, index) {
-          final item = data[index];
+          final item = cp.data[index];
           // repo 결과인 Model 을 기반으로 RestaurantCard 생성
           return RestaurantCard.fromModel(restaurantModel: item);
         },
