@@ -12,11 +12,36 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/model/cursor_pagination_model.dart';
 
-class RestaurantScreen extends ConsumerWidget {
+class RestaurantScreen extends ConsumerStatefulWidget {
   const RestaurantScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<RestaurantScreen> createState() => _RestaurantScreenState();
+}
+
+class _RestaurantScreenState extends ConsumerState<RestaurantScreen> {
+  // * 스크롤 마지막 내렸을 때 핸들링
+  final ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    scrollController.addListener(scrollListener);
+  }
+
+  void scrollListener() {
+    if (scrollController.offset >
+        scrollController.position.maxScrollExtent - 300) {
+      ref.read(restaurantStateProvider.notifier).paginate(
+            fetchMore: true,
+          );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     /* 
     - restaurantStateProvider
       - RestaurantStateNotifier
@@ -39,15 +64,24 @@ class RestaurantScreen extends ConsumerWidget {
       );
     }
 
-    if (data is CursorPagination) {}
-
+    // 나머지 패치 성공, 로딩 중인 경우 캐스팅
     final cp = data as CursorPagination;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: ListView.separated(
-        itemCount: cp.data.length,
+        // * 스크롤 컨트롤러
+        controller: scrollController,
+        itemCount: cp.data.length + 1,
         itemBuilder: (_, index) {
+          if (index == cp.data.length) {
+            return Center(
+              child: data is CursorPaginationFetchingMore
+                  ? CircularProgressIndicator()
+                  : Text("마지막 데이터!"),
+            );
+          }
+
           final item = cp.data[index];
           // repo 결과인 Model 을 기반으로 RestaurantCard 생성
           return RestaurantCard.fromModel(restaurantModel: item);
