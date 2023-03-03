@@ -4,6 +4,7 @@ import 'package:codefactory_intermediate/restaurant/component/restaurant_card.da
 import 'package:codefactory_intermediate/restaurant/model/restaurant_model.dart';
 import 'package:codefactory_intermediate/restaurant/provider/restaurant_provider.dart';
 import 'package:codefactory_intermediate/restaurant/repository/restaurant_repository.dart';
+import 'package:codefactory_intermediate/restaurant/view/restaurant_detail_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -84,7 +85,20 @@ class _RestaurantScreenState extends ConsumerState<RestaurantScreen> {
 
           final item = cp.data[index];
           // repo 결과인 Model 을 기반으로 RestaurantCard 생성
-          return RestaurantCard.fromModel(restaurantModel: item);
+          return GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => RestaurantDetailScreen(
+                    id: item.id.toString(),
+                  ),
+                ),
+              );
+            },
+            child: RestaurantCard.fromModel(
+              restaurantModel: item,
+            ),
+          );
         },
         separatorBuilder: (context, index) {
           return SizedBox(

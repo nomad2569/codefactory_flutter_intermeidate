@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../common/const/data.dart';
+import '../../common/utils/data_utils.dart';
 part 'restaurant_model.g.dart';
 
 enum RestaurantPriceRange {
@@ -14,7 +15,7 @@ class RestaurantModel {
   final String id;
   final String name;
   @JsonKey(
-    fromJson: pathConcatThumbUrl,
+    fromJson: DataUtils.pathConcatThumbUrl,
   )
   final String thumbUrl;
   final List<String> tags;
@@ -35,10 +36,6 @@ class RestaurantModel {
     required this.deliveryTime,
     required this.deliveryFee,
   });
-
-  static pathConcatThumbUrl(String thumbUrl) {
-    return 'http://$baseIp:$basePort$thumbUrl';
-  }
 
   factory RestaurantModel.fromJson(final Map<String, dynamic> json) =>
       _$RestaurantModelFromJson(json);

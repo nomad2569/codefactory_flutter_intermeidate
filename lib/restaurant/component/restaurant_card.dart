@@ -13,6 +13,11 @@ class RestaurantCard extends StatelessWidget {
   final int timelapse;
   final int delivFee;
 
+  // 상세 카드 여부
+  final bool isDetail;
+
+  final String? detail;
+
   const RestaurantCard({
     super.key,
     required this.image,
@@ -22,10 +27,14 @@ class RestaurantCard extends StatelessWidget {
     required this.receipt,
     required this.timelapse,
     required this.delivFee,
+    this.isDetail = false,
+    this.detail,
   });
 
-  factory RestaurantCard.fromModel(
-      {required final RestaurantModel restaurantModel}) {
+  factory RestaurantCard.fromModel({
+    required final RestaurantModel restaurantModel,
+    bool isDetail = false,
+  }) {
     return RestaurantCard(
       image: Image.network(
         restaurantModel.thumbUrl,
@@ -36,6 +45,7 @@ class RestaurantCard extends StatelessWidget {
       receipt: restaurantModel.ratingsCount,
       timelapse: restaurantModel.deliveryTime,
       delivFee: restaurantModel.deliveryFee,
+      isDetail: isDetail,
     );
   }
 
@@ -52,36 +62,48 @@ class RestaurantCard extends StatelessWidget {
     ];
     return Column(
       children: [
-        ClipRRect(borderRadius: BorderRadius.circular(8.0), child: image),
+        ClipRRect(
+            borderRadius: !isDetail
+                ? BorderRadius.circular(8.0)
+                : BorderRadius.circular(0),
+            child: image),
         SizedBox(height: 16),
-        Column(
-          /*
-          crossAxisAlignment 속성은 하위 항목이 열 내에서 수평으로 정렬되는 방식을 제어합니다.
-          crossAxisAlignment를 CrossAxisAlignment.stretch로 설정하면 열 내의 사용 가능한 공간을 채우기 위해 하위 요소가 가로로 늘어납니다.
-           */
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: isDetail ? 16.0 : 0.0),
+          child: Column(
+            /*
+            crossAxisAlignment 속성은 하위 항목이 열 내에서 수평으로 정렬되는 방식을 제어합니다.
+            crossAxisAlignment를 CrossAxisAlignment.stretch로 설정하면 열 내의 사용 가능한 공간을 채우기 위해 하위 요소가 가로로 늘어납니다.
+             */
 
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              title,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-            ),
-            SizedBox(height: 4),
-            Text(
-              tags.join(' - '),
-              style: TextStyle(fontWeight: FontWeight.w300),
-            ),
-            SizedBox(height: 4),
-            Row(children: [
-              for (Map mapp in IconsTexts)
-                Row(
-                  children: [
-                    _IconText(icon: mapp['icon'], label: mapp['label']),
-                    SizedBox(width: 4),
-                  ],
-                )
-            ])
-          ],
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                title,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+              ),
+              SizedBox(height: 4),
+              Text(
+                tags.join(' - '),
+                style: TextStyle(fontWeight: FontWeight.w300),
+              ),
+              SizedBox(height: 4),
+              Row(children: [
+                for (Map mapp in IconsTexts)
+                  Row(
+                    children: [
+                      _IconText(icon: mapp['icon'], label: mapp['label']),
+                      SizedBox(width: 4),
+                    ],
+                  )
+              ]),
+              if (detail != null && isDetail)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: Text(detail!),
+                ),
+            ],
+          ),
         )
       ],
     );

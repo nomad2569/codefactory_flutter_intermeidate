@@ -1,13 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'restaurant_model.dart';
+part of 'restaurant_detail_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-RestaurantModel _$RestaurantModelFromJson(Map<String, dynamic> json) =>
-    RestaurantModel(
+RestaurantDetailModel _$RestaurantDetailModelFromJson(
+        Map<String, dynamic> json) =>
+    RestaurantDetailModel(
       id: json['id'] as String,
       name: json['name'] as String,
       thumbUrl: DataUtils.pathConcatThumbUrl(json['thumbUrl'] as String),
@@ -18,9 +19,14 @@ RestaurantModel _$RestaurantModelFromJson(Map<String, dynamic> json) =>
       ratingsCount: json['ratingsCount'] as int,
       deliveryTime: json['deliveryTime'] as int,
       deliveryFee: json['deliveryFee'] as int,
+      detail: json['detail'] as String,
+      products: (json['products'] as List<dynamic>)
+          .map((e) => ProductModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
-Map<String, dynamic> _$RestaurantModelToJson(RestaurantModel instance) =>
+Map<String, dynamic> _$RestaurantDetailModelToJson(
+        RestaurantDetailModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
@@ -31,6 +37,8 @@ Map<String, dynamic> _$RestaurantModelToJson(RestaurantModel instance) =>
       'ratingsCount': instance.ratingsCount,
       'deliveryTime': instance.deliveryTime,
       'deliveryFee': instance.deliveryFee,
+      'detail': instance.detail,
+      'products': instance.products,
     };
 
 const _$RestaurantPriceRangeEnumMap = {
@@ -38,3 +46,23 @@ const _$RestaurantPriceRangeEnumMap = {
   RestaurantPriceRange.medium: 'medium',
   RestaurantPriceRange.cheap: 'cheap',
 };
+
+ProductModel _$ProductModelFromJson(Map<String, dynamic> json) => ProductModel(
+      id: json['id'] as String,
+      restaurant:
+          RestaurantModel.fromJson(json['restaurant'] as Map<String, dynamic>),
+      name: json['name'] as String,
+      detail: json['detail'] as String,
+      imgUrl: DataUtils.pathConcatThumbUrl(json['imgUrl'] as String),
+      price: json['price'] as int,
+    );
+
+Map<String, dynamic> _$ProductModelToJson(ProductModel instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'restaurant': instance.restaurant,
+      'name': instance.name,
+      'detail': instance.detail,
+      'imgUrl': instance.imgUrl,
+      'price': instance.price,
+    };
