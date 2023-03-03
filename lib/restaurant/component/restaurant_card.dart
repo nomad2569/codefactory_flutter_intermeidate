@@ -18,6 +18,8 @@ class RestaurantCard extends StatelessWidget {
 
   final String? detail;
 
+  final String? heroKey;
+
   const RestaurantCard({
     super.key,
     required this.image,
@@ -29,11 +31,13 @@ class RestaurantCard extends StatelessWidget {
     required this.delivFee,
     this.isDetail = false,
     this.detail,
+    this.heroKey,
   });
 
   factory RestaurantCard.fromModel({
     required final RestaurantModel restaurantModel,
     bool isDetail = false,
+    String? heroKey,
   }) {
     return RestaurantCard(
       image: Image.network(
@@ -46,6 +50,7 @@ class RestaurantCard extends StatelessWidget {
       timelapse: restaurantModel.deliveryTime,
       delivFee: restaurantModel.deliveryFee,
       isDetail: isDetail,
+      heroKey: heroKey,
     );
   }
 
@@ -62,11 +67,21 @@ class RestaurantCard extends StatelessWidget {
     ];
     return Column(
       children: [
-        ClipRRect(
-            borderRadius: !isDetail
-                ? BorderRadius.circular(8.0)
-                : BorderRadius.circular(0),
-            child: image),
+        if (heroKey != null)
+          Hero(
+            tag: ObjectKey(heroKey),
+            child: ClipRRect(
+                borderRadius: !isDetail
+                    ? BorderRadius.circular(8.0)
+                    : BorderRadius.circular(0),
+                child: image),
+          ),
+        if (heroKey == null)
+          ClipRRect(
+              borderRadius: !isDetail
+                  ? BorderRadius.circular(8.0)
+                  : BorderRadius.circular(0),
+              child: image),
         SizedBox(height: 16),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: isDetail ? 16.0 : 0.0),

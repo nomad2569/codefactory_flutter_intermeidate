@@ -62,6 +62,7 @@ SliverToBoxAdapter renderTop(RestaurantModel restaurantModel) {
         RestaurantCard.fromModel(
           restaurantModel: restaurantModel,
           isDetail: true,
+          heroKey: restaurantModel.id,
         ),
       ],
     ),

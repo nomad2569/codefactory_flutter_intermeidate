@@ -97,6 +97,7 @@ class _RestaurantScreenState extends ConsumerState<RestaurantScreen> {
             },
             child: RestaurantCard.fromModel(
               restaurantModel: item,
+              heroKey: item.id,
             ),
           );
         },
