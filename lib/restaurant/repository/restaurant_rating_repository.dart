@@ -1,5 +1,7 @@
 import 'package:codefactory_intermediate/common/dio/dio.dart';
+import 'package:codefactory_intermediate/common/repository/base_pagination_repository.dart';
 import 'package:codefactory_intermediate/rating/model/rating_model.dart';
+import 'package:codefactory_intermediate/restaurant/model/restaurant_model.dart';
 import 'package:dio/dio.dart' hide Headers;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retrofit/retrofit.dart';
@@ -20,7 +22,8 @@ final RestaurantRatingRepositoryProvider =
 
 // baseUrl: http://baseIp:basePort/:rid/rating
 @RestApi()
-abstract class RestaurantRatingRepository {
+abstract class RestaurantRatingRepository
+    implements IBasePaginationRepository<RestaurantModel> {
   factory RestaurantRatingRepository(Dio dio, {String baseUrl}) =
       _RestaurantRatingRepository;
 

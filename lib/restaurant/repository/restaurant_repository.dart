@@ -1,6 +1,7 @@
 import 'package:codefactory_intermediate/common/dio/dio.dart';
 import 'package:codefactory_intermediate/common/model/cursor_pagination_model.dart';
 import 'package:codefactory_intermediate/common/model/pagination_params.dart';
+import 'package:codefactory_intermediate/common/repository/base_pagination_repository.dart';
 import 'package:codefactory_intermediate/restaurant/model/restaurant_detail_model.dart';
 import 'package:codefactory_intermediate/restaurant/model/restaurant_model.dart';
 import 'package:dio/dio.dart' hide Headers;
@@ -21,7 +22,8 @@ final RestaurantRepositoryProvider = Provider<RestaurantRepository>((ref) {
 
 @RestApi()
 // 무조건 `abstract` 로 생성해야함
-abstract class RestaurantRepository {
+abstract class RestaurantRepository
+    implements IBasePaginationRepository<RestaurantModel> {
   // baseUrl 예시 : http:$baseIp:$basePort/restaurant
   factory RestaurantRepository(Dio dio, {String baseUrl}) =
       _RestaurantRepository;
