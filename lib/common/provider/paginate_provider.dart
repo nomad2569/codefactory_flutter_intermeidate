@@ -16,9 +16,12 @@ class PaginationProvider<T extends IModelWithId,
 
   PaginationProvider({
     required this.repository,
-  }) : super(
-          CursorPaginationLoading(),
-        );
+  }) :
+        //* instance 생성 시, 초기 상태를 `CursorPaginationLoading` 으로 설정
+        //* paginate 함수 실행 (데이터 초기 패칭)
+        super(CursorPaginationLoading()) {
+    paginate();
+  }
 
   Future<void> paginate({
     int fetchCount = 20,
@@ -73,12 +76,11 @@ class PaginationProvider<T extends IModelWithId,
         final pState = state as CursorPagination<T>;
 
         // FetchingMore 상태로 변환
-        state =
-            CursorPaginationFetchingMore(meta: pState.meta, data: pState.data);
+        state = CursorPaginationFetchingMore<T>(
+            meta: pState.meta, data: pState.data);
 
-        paginationParams.copyWith(
-          after: pState.data.last.id,
-        );
+        paginationParams =
+            paginationParams.copyWith(after: pState.data.last.id);
       }
       // 데이터를 처음부터 가져오는 상황
       else {
@@ -94,7 +96,6 @@ class PaginationProvider<T extends IModelWithId,
           state = CursorPaginationLoading();
         }
       }
-
       final resp =
           await repository.paginate(paginationParams: paginationParams);
 
@@ -111,7 +112,9 @@ class PaginationProvider<T extends IModelWithId,
       else {
         state = resp;
       }
-    } catch (e) {
+    } catch (e, stack) {
+      print(e);
+      print(stack);
       state = CursorPaginationError(message: "데이터 패치 에러");
     }
   }

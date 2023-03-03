@@ -5,6 +5,7 @@ import 'package:codefactory_intermediate/restaurant/component/restaurant_card.da
 import 'package:codefactory_intermediate/restaurant/model/restaurant_detail_model.dart';
 import 'package:codefactory_intermediate/restaurant/model/restaurant_model.dart';
 import 'package:codefactory_intermediate/restaurant/provider/restaurant_provider.dart';
+import 'package:codefactory_intermediate/restaurant/provider/restaurant_rating_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -39,6 +40,9 @@ class _RestaurantDetailScreenState
   Widget build(BuildContext context) {
     // id 에 맞는 state 를 찾아옴
     final state = ref.watch(restuarantDetailProvider(widget.id));
+    final ratingsState = ref.watch(restaurantRatingProvider(widget.id));
+
+    print(ratingsState);
 
     if (state == null) {
       return const DefaultLayout(

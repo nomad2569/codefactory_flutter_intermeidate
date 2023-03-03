@@ -23,7 +23,7 @@ class CursorPagination<T> extends CursorPaginationBase {
 
   CursorPagination({required this.meta, required this.data});
 
-  CursorPagination copyWith(
+  CursorPagination<T> copyWith(
       {final CursorPaginationMeta? meta, final List<T>? data}) {
     return CursorPagination(
       meta: meta ?? this.meta,

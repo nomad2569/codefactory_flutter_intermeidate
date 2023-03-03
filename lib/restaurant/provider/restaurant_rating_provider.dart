@@ -1,12 +1,16 @@
 import 'package:codefactory_intermediate/common/model/cursor_pagination_model.dart';
+import 'package:codefactory_intermediate/common/provider/paginate_provider.dart';
+import 'package:codefactory_intermediate/rating/model/rating_model.dart';
 import 'package:codefactory_intermediate/restaurant/repository/restaurant_rating_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class RestaurantRatingStateNotifier
-    extends StateNotifier<CursorPaginationBase> {
-  final RestaurantRatingRepository repository;
+final restaurantRatingProvider = StateNotifierProvider.family<
+    RestaurantRatingStateNotifier, CursorPaginationBase, String>((ref, id) {
+  final repo = ref.watch(RestaurantRatingRepositoryProvider(id));
+  return RestaurantRatingStateNotifier(repository: repo);
+});
 
-  RestaurantRatingStateNotifier({
-    required this.repository,
-  }) : super(CursorPaginationLoading());
+class RestaurantRatingStateNotifier
+    extends PaginationProvider<RatingModel, RestaurantRatingRepository> {
+  RestaurantRatingStateNotifier({required super.repository});
 }

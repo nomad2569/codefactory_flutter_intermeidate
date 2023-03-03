@@ -17,16 +17,17 @@ final RestaurantRatingRepositoryProvider =
   final dio = ref.watch(dioProvider);
 
   return RestaurantRatingRepository(dio,
-      baseUrl: 'http://$baseIp:$basePort/$id/rating');
+      baseUrl: 'http://$baseIp:$basePort/restaurant/$id/rating');
 });
 
 // baseUrl: http://baseIp:basePort/:rid/rating
 @RestApi()
 abstract class RestaurantRatingRepository
-    implements IBasePaginationRepository<RestaurantModel> {
+    implements IBasePaginationRepository<RatingModel> {
   factory RestaurantRatingRepository(Dio dio, {String baseUrl}) =
       _RestaurantRatingRepository;
 
+  @override
   @GET('/')
   // dio interceptor 에서 미리 정해둔 syntax
   @Headers({

@@ -5,7 +5,8 @@ class DataUtils {
     return 'http://$baseIp:$basePort$thumbUrl';
   }
 
-  static List<String> listPathsToUrls(List<String> paths) {
+  // 들어오는 부분 dynamic type 으로 가정했다.
+  static List<String> listPathsToUrls(List paths) {
     return paths.map((e) => pathConcatThumbUrl(e)).toList();
   }
 }
