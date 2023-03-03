@@ -1,5 +1,6 @@
 import 'package:codefactory_intermediate/common/layout/default_layout.dart';
 import 'package:codefactory_intermediate/product/component/product_card.dart';
+import 'package:codefactory_intermediate/rating/component/rating_card.dart';
 import 'package:codefactory_intermediate/restaurant/component/restaurant_card.dart';
 import 'package:codefactory_intermediate/restaurant/model/restaurant_detail_model.dart';
 import 'package:codefactory_intermediate/restaurant/model/restaurant_model.dart';
@@ -47,12 +48,27 @@ class _RestaurantDetailScreenState
       );
     }
     return DefaultLayout(
-        title: state.name,
-        child: CustomScrollView(slivers: [
+      title: state.name,
+      child: CustomScrollView(
+        slivers: [
           renderTop(state),
           if (state is RestaurantDetailModel) renderLabel(),
           if (state is RestaurantDetailModel) renderProducts(state.products),
-        ]));
+          const SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            sliver: SliverToBoxAdapter(
+              child: RatingCard(
+                  avatarImage:
+                      AssetImage('asset/img/logo/codefactory_logo.png'),
+                  images: [],
+                  rating: 4,
+                  email: 'alsrb001218@korea.ac.kr',
+                  content: "맛잇어용맛잇어용맛잇어용맛잇어용맛잇어용맛잇어용맛잇어용맛잇어용맛잇어용~"),
+            ),
+          )
+        ],
+      ),
+    );
   }
 }
 
