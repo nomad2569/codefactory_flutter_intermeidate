@@ -1,5 +1,6 @@
 import 'package:codefactory_intermediate/common/const/data.dart';
 import 'package:codefactory_intermediate/common/dio/dio.dart';
+import 'package:codefactory_intermediate/common/utils/pagination_utils.dart';
 import 'package:codefactory_intermediate/restaurant/component/restaurant_card.dart';
 import 'package:codefactory_intermediate/restaurant/model/restaurant_model.dart';
 import 'package:codefactory_intermediate/restaurant/provider/restaurant_provider.dart';
@@ -33,12 +34,10 @@ class _RestaurantScreenState extends ConsumerState<RestaurantScreen> {
   }
 
   void scrollListener() {
-    if (scrollController.offset >
-        scrollController.position.maxScrollExtent - 300) {
-      ref.read(restaurantStateProvider.notifier).paginate(
-            fetchMore: true,
-          );
-    }
+    PaginationUtils.paginate(
+      scrollController: scrollController,
+      provider: ref.read(restaurantStateProvider.notifier),
+    );
   }
 
   @override
@@ -102,7 +101,7 @@ class _RestaurantScreenState extends ConsumerState<RestaurantScreen> {
           );
         },
         separatorBuilder: (context, index) {
-          return SizedBox(
+          return const SizedBox(
             height: 16,
           );
         },

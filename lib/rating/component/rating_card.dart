@@ -1,3 +1,4 @@
+import 'package:codefactory_intermediate/rating/model/rating_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -24,6 +25,16 @@ class RatingCard extends StatelessWidget {
     required this.email,
     required this.content,
   });
+
+  factory RatingCard.fromModel({required RatingModel ratingModel}) {
+    return RatingCard(
+      avatarImage: NetworkImage(ratingModel.user.imageUrl),
+      images: ratingModel.imgUrls.map((e) => Image.network(e)).toList(),
+      rating: ratingModel.rating,
+      email: ratingModel.user.username,
+      content: ratingModel.content,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

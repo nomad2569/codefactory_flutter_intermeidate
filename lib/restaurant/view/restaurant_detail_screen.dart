@@ -1,6 +1,9 @@
 import 'package:codefactory_intermediate/common/layout/default_layout.dart';
+import 'package:codefactory_intermediate/common/model/cursor_pagination_model.dart';
+import 'package:codefactory_intermediate/common/utils/pagination_utils.dart';
 import 'package:codefactory_intermediate/product/component/product_card.dart';
 import 'package:codefactory_intermediate/rating/component/rating_card.dart';
+import 'package:codefactory_intermediate/rating/model/rating_model.dart';
 import 'package:codefactory_intermediate/restaurant/component/restaurant_card.dart';
 import 'package:codefactory_intermediate/restaurant/model/restaurant_detail_model.dart';
 import 'package:codefactory_intermediate/restaurant/model/restaurant_model.dart';
@@ -26,14 +29,24 @@ class RestaurantDetailScreen extends ConsumerStatefulWidget {
 
 class _RestaurantDetailScreenState
     extends ConsumerState<RestaurantDetailScreen> {
-  @override
+  final ScrollController scrollController = ScrollController();
 
   // id 화면에 들어갈 때마다 detail 요청
+  @override
   void initState() {
     super.initState();
 
     // 상위 클래스 ConsumerStatefulWidget 의 property 접근
     ref.read(restaurantStateProvider.notifier).getDetail(id: widget.id);
+
+    scrollController.addListener(listener);
+  }
+
+  void listener() {
+    PaginationUtils.paginate(
+      scrollController: scrollController,
+      provider: ref.read(restaurantRatingProvider(widget.id).notifier),
+    );
   }
 
   @override
@@ -42,10 +55,8 @@ class _RestaurantDetailScreenState
     final state = ref.watch(restuarantDetailProvider(widget.id));
     final ratingsState = ref.watch(restaurantRatingProvider(widget.id));
 
-    print(ratingsState);
-
     if (state == null) {
-      return const DefaultLayout(
+      return DefaultLayout(
         child: Center(
           child: CircularProgressIndicator(),
         ),
@@ -54,22 +65,31 @@ class _RestaurantDetailScreenState
     return DefaultLayout(
       title: state.name,
       child: CustomScrollView(
+        controller: scrollController,
         slivers: [
           renderTop(state),
-          if (state is RestaurantDetailModel) renderLabel(),
+          renderLabel(),
           if (state is RestaurantDetailModel) renderProducts(state.products),
-          const SliverPadding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            sliver: SliverToBoxAdapter(
-              child: RatingCard(
-                  avatarImage:
-                      AssetImage('asset/img/logo/codefactory_logo.png'),
-                  images: [],
-                  rating: 4,
-                  email: 'alsrb001218@korea.ac.kr',
-                  content: "맛잇어용맛잇어용맛잇어용맛잇어용맛잇어용맛잇어용맛잇어용맛잇어용맛잇어용~"),
+          if (state is! RestaurantDetailModel)
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
             ),
-          )
+          if (ratingsState is CursorPagination<RatingModel>)
+            renderRatings(ratingsState.data),
+          if (ratingsState is CursorPaginationFetchingMore<RatingModel>)
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 16.0),
+                child: const Center(
+                  child: const CircularProgressIndicator(),
+                ),
+              ),
+            )
         ],
       ),
     );
@@ -123,7 +143,7 @@ SliverPadding renderLabel() {
 }
 
 // SliverList 를 반환함
-renderProducts(List<ProductModel> products) {
+SliverPadding renderProducts(List<ProductModel> products) {
   // Sliver 에 padding 주기
   // * child 대신 sliver 사용
   return SliverPadding(
@@ -142,4 +162,16 @@ renderProducts(List<ProductModel> products) {
       ),
     ),
   );
+}
+
+SliverPadding renderRatings(List<RatingModel> ratings) {
+  return SliverPadding(
+      padding: EdgeInsets.symmetric(
+        horizontal: 16,
+      ),
+      sliver: SliverList(
+        delegate: SliverChildBuilderDelegate((context, index) {
+          return RatingCard.fromModel(ratingModel: ratings[index]);
+        }, childCount: ratings.length),
+      ));
 }
