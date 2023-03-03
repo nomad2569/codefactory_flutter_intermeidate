@@ -1,3 +1,4 @@
+import 'package:codefactory_intermediate/common/model/model_with_id.dart';
 import 'package:codefactory_intermediate/user/model/user_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -6,7 +7,7 @@ import '../../common/utils/data_utils.dart';
 part 'rating_model.g.dart';
 
 @JsonSerializable()
-class RatingModel {
+class RatingModel implements IModelWithId {
   final String id;
   final UserModel user;
   final int rating;

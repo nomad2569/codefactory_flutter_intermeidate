@@ -1,4 +1,5 @@
 import 'package:codefactory_intermediate/common/model/cursor_pagination_model.dart';
+import 'package:codefactory_intermediate/common/model/model_with_id.dart';
 import 'package:codefactory_intermediate/common/repository/base_pagination_repository.dart';
 import 'package:codefactory_intermediate/restaurant/repository/restaurant_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,7 +7,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../model/pagination_params.dart';
 
 // dart 에서는 generic 에는 implements 가 불가능하다. interface 라도, extends 하면 됨. 의도된 것
-class PaginationProvider<U extends IBasePaginationRepository>
+// * T: 통신받을 데이터
+// * U: 각 route 별 Repository
+class PaginationProvider<T extends IModelWithId,
+        U extends IBasePaginationRepository<T>>
     extends StateNotifier<CursorPaginationBase> {
   final U repository;
 
@@ -63,25 +67,27 @@ class PaginationProvider<U extends IBasePaginationRepository>
         count: fetchCount,
       );
 
-      // fetchmore
+      // * fetchmore
       // 데이터를 추가로 더 가져올 때
       if (fetchMore) {
-        final pState = state as CursorPagination;
+        final pState = state as CursorPagination<T>;
 
         // FetchingMore 상태로 변환
         state =
             CursorPaginationFetchingMore(meta: pState.meta, data: pState.data);
 
-        paginationParams.copyWith(after: pState.data.last.id);
+        paginationParams.copyWith(
+          after: pState.data.last.id,
+        );
       }
       // 데이터를 처음부터 가져오는 상황
       else {
         // 만약 데이터가 존재한다면, 기존 데이터 보존한채로 API 호출
         if (state is CursorPagination && !forceRefetch) {
-          final pState = state as CursorPagination;
+          final pState = state as CursorPagination<T>;
 
-          state =
-              CursorPaginationRefetching(meta: pState.meta, data: pState.data);
+          state = CursorPaginationRefetching<T>(
+              meta: pState.meta, data: pState.data);
         }
         // 강력 새로고침 시 로딩
         else {
@@ -93,7 +99,7 @@ class PaginationProvider<U extends IBasePaginationRepository>
           await repository.paginate(paginationParams: paginationParams);
 
       if (state is CursorPaginationFetchingMore) {
-        final pState = state as CursorPaginationFetchingMore;
+        final pState = state as CursorPaginationFetchingMore<T>;
 
         // 기존 데이터 이어붙이기
         state = resp.copyWith(data: [
