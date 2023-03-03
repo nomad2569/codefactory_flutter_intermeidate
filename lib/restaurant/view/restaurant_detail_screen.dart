@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:skeletons/skeletons.dart';
 
 class RestaurantDetailScreen extends ConsumerStatefulWidget {
   final String id;
@@ -65,6 +66,24 @@ SliverToBoxAdapter renderTop(RestaurantModel restaurantModel) {
           heroKey: restaurantModel.id,
         ),
       ],
+    ),
+  );
+}
+
+// * skeleton 적용 시 에러 나중에 할 것
+SliverPadding renderLoading() {
+  return SliverPadding(
+    padding: EdgeInsets.symmetric(
+      horizontal: 16,
+    ),
+    sliver: SliverList(
+      delegate: SliverChildListDelegate(
+        [
+          SkeletonParagraph(
+            style: SkeletonParagraphStyle(lines: 2),
+          ),
+        ],
+      ),
     ),
   );
 }
