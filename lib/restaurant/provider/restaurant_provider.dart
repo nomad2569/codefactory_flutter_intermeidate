@@ -141,15 +141,13 @@ class RestaurantStateNotifier extends StateNotifier<CursorPaginationBase> {
 
     final pState = state as CursorPagination;
 
-    print(144);
     // id 에 해당하는 detail 정보 불러오기
     final resp = await repository.getRestaurantDetail(id: id);
 
     // 현재 정보 업데이트 하기
     // 1. id 와 일치하는 데이터 찾기
     // 2. resp 불러온 값이 있으면 업데이트 하기
-    print(150);
-    print(resp);
+
     state = pState.copyWith(
       data: pState.data
           .map<RestaurantModel>(
