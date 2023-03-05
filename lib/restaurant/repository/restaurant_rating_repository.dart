@@ -27,7 +27,6 @@ abstract class RestaurantRatingRepository
   factory RestaurantRatingRepository(Dio dio, {String baseUrl}) =
       _RestaurantRatingRepository;
 
-  @override
   @GET('/')
   // dio interceptor 에서 미리 정해둔 syntax
   @Headers({

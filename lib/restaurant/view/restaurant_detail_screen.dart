@@ -85,8 +85,8 @@ class _RestaurantDetailScreenState
             const SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 16.0),
-                child: const Center(
-                  child: const CircularProgressIndicator(),
+                child: Center(
+                  child: CircularProgressIndicator(),
                 ),
               ),
             )

@@ -6,6 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../repository/restaurant_repository.dart';
 
+import 'package:collection/collection.dart';
+
 final restuarantDetailProvider =
     Provider.family<RestaurantModel?, String>((ref, id) {
   final state = ref.watch(restaurantStateProvider);
@@ -14,7 +16,9 @@ final restuarantDetailProvider =
     return null;
   }
 
-  return state.data.firstWhere((element) => element.id == id);
+  // `firstWhere` 는 값이 존재하지 않을 때 에러를 발생시킨다.
+  // 대신 null 을 발생시키기 위해
+  return state.data.firstWhereOrNull((element) => element.id == id);
 });
 
 final restaurantStateProvider =
@@ -48,10 +52,21 @@ class RestaurantStateNotifier
     // id 에 해당하는 detail 정보 불러오기
     final resp = await repository.getRestaurantDetail(id: id);
 
+    //* 존재하지 않는 id 에 대해서 불러오기를 했다면
+    // 캐시의 끝에 데이터를 추가한다.
+    if (pState.data.where((e) => e.id == id).isEmpty) {
+      state = pState.copyWith(
+        data: <RestaurantModel>[
+          ...pState.data,
+          resp,
+        ],
+      );
+      return;
+    }
+
     // 현재 정보 업데이트 하기
     // 1. id 와 일치하는 데이터 찾기
     // 2. resp 불러온 값이 있으면 업데이트 하기
-
     state = pState.copyWith(
       data: pState.data
           .map<RestaurantModel>(
