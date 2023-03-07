@@ -11,59 +11,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../secure_storage/secure_storage.dart';
 
-class SplashScreen extends ConsumerStatefulWidget {
+class SplashScreen extends ConsumerWidget {
+  static String get routeName => 'splash';
   const SplashScreen({super.key});
-
   @override
-  ConsumerState<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends ConsumerState<SplashScreen> {
-  // API 호출을 위한 dio 활성화
-  final dio = Dio();
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
-    // deleteToken();
-    // Token 의 유무 파악
-    checkToken();
-  }
-
-  void deleteToken() async {
-    final storage = ref.read(secureStorageProvider);
-    await storage.deleteAll();
-  }
-
-  void checkToken() async {
-    final storage = ref.read(secureStorageProvider);
-    final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
-    final refreshToken = await storage.read(key: REFRESH_TOKEN_KEY);
-    try {
-      // refreshToken 으로 갱신 요청
-      final response = await dio.post('http://$baseIp:$basePort/auth/token',
-          options: Options(headers: {
-            'authorization': 'Bearer $refreshToken',
-          }));
-      await storage.write(
-          key: ACCESS_TOKEN_KEY, value: response.data['accessToken']);
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => RootTab()),
-        (route) => false,
-      );
-    } catch (e) {
-      // refreshToken 이 만료되었다면
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => LoginScreen()),
-        (route) => false,
-      );
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return DefaultLayout(
       bgColor: PRIMARY_COLOR,
       child: SizedBox(

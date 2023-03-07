@@ -110,7 +110,6 @@ class CustomInterceptor extends Interceptor {
         return handler.reject(e);
       }
     }
-
     return super.onError(err, handler);
   }
 }
