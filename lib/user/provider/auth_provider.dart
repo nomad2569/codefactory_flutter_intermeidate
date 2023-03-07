@@ -55,6 +55,12 @@ class AuthProvider extends ChangeNotifier {
         ),
       ];
 
+  //* 순환 import 를 방지하기 위해, `userMeProvider` 가 아닌
+  // dio 를 의존하지 않는 함수를 만듦
+  void logout() {
+    ref.read(userMeProvider.notifier).logout();
+  }
+
   // SplashScreen
   // 앱을 처음 시작했을 때
   // 1. 토큰의 존재 확인

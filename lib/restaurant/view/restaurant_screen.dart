@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../common/model/cursor_pagination_model.dart';
 
@@ -20,16 +21,15 @@ class RestaurantScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return PaginationListView(
       provider: restaurantStateProvider,
-      itemBuilder: <RestaurantModel>(context, index, model) {
+      itemBuilder: <RestaurantModel>(_, index, model) {
         return GestureDetector(
           onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => RestaurantDetailScreen(
-                  id: model.id.toString(),
-                ),
-              ),
-            );
+            //* :rid 를 넣어주어야함
+            // `go` 로 하면 직접 id 를 넣어줄 수 있지만 `goNamed` 에서는 아래와 같이 한다.
+            // context.go('/restaurant/${model.id}');
+            context.goNamed(RestaurantDetailScreen.routeName, params: {
+              'rid': model.id,
+            });
           },
           child: RestaurantCard.fromModel(
             restaurantModel: model,

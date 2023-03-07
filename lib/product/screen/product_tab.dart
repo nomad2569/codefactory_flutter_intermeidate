@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class ProductTab extends ConsumerWidget {
   const ProductTab({super.key});
@@ -20,14 +21,12 @@ class ProductTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return PaginationListView(
       provider: productProvider,
-      itemBuilder: <ProductModel>(context, index, model) {
+      itemBuilder: <ProductModel>(_, index, model) {
         return GestureDetector(
           onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => RestaurantDetailScreen(id: model.restaurant.id),
-              ),
-            );
+            context.goNamed(RestaurantDetailScreen.routeName, params: {
+              'rid': model.restaurant.id,
+            });
           },
           child: ProductCard(
             product: model,
