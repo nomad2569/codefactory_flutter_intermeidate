@@ -7,12 +7,14 @@ class DefaultLayout extends StatelessWidget {
   final Color? bgColor;
   final String? title;
   final BottomNavigationBar? bottomNavigationBar;
+  final Widget? floatingActionButton;
   const DefaultLayout({
     super.key,
     required this.child,
     this.bgColor,
     this.title,
     this.bottomNavigationBar,
+    this.floatingActionButton,
   });
 
   @override
@@ -22,6 +24,8 @@ class DefaultLayout extends StatelessWidget {
       appBar: renderAppBar(),
       body: child,
       bottomNavigationBar: bottomNavigationBar,
+      // `badges` 사용 위함
+      floatingActionButton: floatingActionButton,
     );
   }
 

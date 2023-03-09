@@ -30,6 +30,7 @@ class RestaurantDetailModel extends RestaurantModel {
 
 @JsonSerializable()
 class ProductModel implements IModelWithId {
+  @override
   final String id;
   final RestaurantModel restaurant;
   final String name;

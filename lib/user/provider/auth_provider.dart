@@ -3,6 +3,7 @@ import 'package:codefactory_intermediate/common/view/splash_screen.dart';
 import 'package:codefactory_intermediate/restaurant/view/restaurant_detail_screen.dart';
 import 'package:codefactory_intermediate/user/model/user_model.dart';
 import 'package:codefactory_intermediate/user/provider/user_me_provider.dart';
+import 'package:codefactory_intermediate/user/view/basket_screen.dart';
 import 'package:codefactory_intermediate/user/view/login_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -43,6 +44,11 @@ class AuthProvider extends ChangeNotifier {
                 ),
               ),
             ]),
+        GoRoute(
+          path: '/basket',
+          name: BasketScreen.routeName,
+          builder: (_, __) => BasketScreen(),
+        ),
         GoRoute(
           path: '/splash',
           name: SplashScreen.routeName,

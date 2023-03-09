@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:codefactory_intermediate/common/const/data.dart';
 import 'package:codefactory_intermediate/user/provider/auth_provider.dart';
 import 'package:dio/dio.dart';
@@ -13,6 +15,7 @@ final dioProvider = Provider((ref) {
   dio.interceptors.add(
     CustomInterceptor(storage: storage, ref: ref),
   );
+  dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
 
   return dio;
 });
@@ -30,6 +33,7 @@ class CustomInterceptor extends Interceptor {
   void onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
     print('[REQ] [${options.method}] ${options.uri}');
+    inspect(options.data);
     // access_token 삽입
     if (options.headers['accessToken'] == 'true') {
       // 키워드 헤더 삭제
@@ -58,7 +62,7 @@ class CustomInterceptor extends Interceptor {
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
     print(
-        '[RES] [${response.requestOptions.method}] ${response.requestOptions.uri}');
+        '[RES ${response.statusCode}] [${response.requestOptions.method}] ${response.requestOptions.uri}');
 
     return super.onResponse(response, handler);
   }
@@ -109,6 +113,7 @@ class CustomInterceptor extends Interceptor {
         // 새로운 요청에 대한 응답 반환하기
         return handler.resolve(newResp);
       } on DioError catch (e) {
+        print('**** 에러가 발생하여 로그아웃 됨 *****');
         //* 에러가 발생했을 때 로그아웃
         ref.read(authProvider.notifier).logout();
 
