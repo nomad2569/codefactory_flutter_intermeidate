@@ -25,7 +25,7 @@ class _App extends ConsumerWidget {
       // 우측 상단 debug 배너 없애기
       debugShowCheckedModeBanner: false,
 
-      // * GoRotuer 관련
+      // * GoRouter 관련
       routerDelegate: router.routerDelegate,
       routeInformationParser: router.routeInformationParser,
       routeInformationProvider: router.routeInformationProvider,

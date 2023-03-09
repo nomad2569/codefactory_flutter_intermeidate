@@ -1,10 +1,13 @@
 import 'package:codefactory_intermediate/common/const/colors.dart';
 import 'package:codefactory_intermediate/restaurant/model/restaurant_detail_model.dart';
 import 'package:codefactory_intermediate/user/provider/basket_provider.dart';
+import 'package:codefactory_intermediate/user/view/basket_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:collection/collection.dart';
+import 'package:go_router/go_router.dart';
 
 class ProductCard extends ConsumerWidget {
   final ProductModel product;
@@ -69,11 +72,36 @@ class ProductCard extends ConsumerWidget {
             ],
           ),
         ),
-        // _Footer(
-        //   total: (basketState.firstWhere((element) => element.product.id == product.id).count + basketState.firstWhere((element) => element.product.id == product.id).product.price).toString(),
-        //   count: basketState.firstWhere((element) => element.product.id == product.id).count,
-        //   onSubtract: basketState.addToBasket(product: product)
-        //   onAdd: onAdd),
+        if (GoRouter.of(context)
+                .location
+                .toString()
+                .contains(BasketScreen.routeName) &&
+            basketState.firstWhereOrNull(
+                    (element) => element.product.id == product.id) !=
+                null)
+          Padding(
+            padding: EdgeInsets.only(top: 8),
+            child: _Footer(
+                total: (basketState
+                            .firstWhere(
+                                (element) => element.product.id == product.id)
+                            .count *
+                        basketState
+                            .firstWhere(
+                                (element) => element.product.id == product.id)
+                            .product
+                            .price)
+                    .toString(),
+                count: basketState
+                    .firstWhere((element) => element.product.id == product.id)
+                    .count,
+                onSubtract: () => ref
+                    .read(basketProvider.notifier)
+                    .removeFromBasket(product: product),
+                onAdd: () => ref
+                    .read(basketProvider.notifier)
+                    .addToBasket(product: product)),
+          ),
       ],
     );
   }
@@ -97,22 +125,34 @@ class _Footer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(
-          '총액 \$$total',
-          style: TextStyle(
-            color: PRIMARY_COLOR,
-            fontWeight: FontWeight.w600,
+        Expanded(
+          child: Text(
+            '총액 \$$total',
+            style: TextStyle(
+              color: PRIMARY_COLOR,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
-        renderButton(icon: Icons.remove, onTap: onSubtract),
-        Text(
-          count.toString(),
-          style: TextStyle(
-            color: PRIMARY_COLOR,
-            fontWeight: FontWeight.w600,
-          ),
+        Row(
+          children: [
+            renderButton(icon: Icons.remove, onTap: onSubtract),
+            SizedBox(
+              width: 8.0,
+            ),
+            Text(
+              count.toString(),
+              style: TextStyle(
+                color: PRIMARY_COLOR,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            SizedBox(
+              width: 8.0,
+            ),
+            renderButton(icon: Icons.add, onTap: onAdd),
+          ],
         ),
-        renderButton(icon: Icons.add, onTap: onAdd),
       ],
     );
   }
