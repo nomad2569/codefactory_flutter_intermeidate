@@ -1,3 +1,4 @@
+import 'package:codefactory_intermediate/common/model/model_with_id.dart';
 import 'package:codefactory_intermediate/common/utils/data_utils.dart';
 import 'package:codefactory_intermediate/restaurant/model/restaurant_model.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -44,7 +45,7 @@ class OrderProductAndCountModel {
 }
 
 @JsonSerializable()
-class OrderModel {
+class OrderModel implements IModelWithId {
   final String id;
   final List<OrderProductAndCountModel> products;
   final int totalPrice;
