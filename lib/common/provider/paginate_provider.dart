@@ -1,10 +1,26 @@
 import 'package:codefactory_intermediate/common/model/cursor_pagination_model.dart';
 import 'package:codefactory_intermediate/common/model/model_with_id.dart';
 import 'package:codefactory_intermediate/common/repository/base_pagination_repository.dart';
-import 'package:codefactory_intermediate/restaurant/repository/restaurant_repository.dart';
+import 'package:debounce_throttle/debounce_throttle.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/pagination_params.dart';
+
+class _PagintaionInfo {
+  final int fetchCount;
+  // 추가로 가져올 데이터가 있는지
+  // true: 추가로 데이터 가져오기
+  // false: 새로고침
+  final bool fetchMore;
+  // 강제 새로고침
+  final bool forceRefetch;
+
+  _PagintaionInfo({
+    this.fetchCount = 20,
+    this.fetchMore = false,
+    this.forceRefetch = false,
+  });
+}
 
 // dart 에서는 generic 에는 implements 가 불가능하다. interface 라도, extends 하면 됨. 의도된 것
 // * T: 통신받을 데이터
@@ -13,6 +29,11 @@ class PaginationProvider<T extends IModelWithId,
         U extends IBasePaginationRepository<T>>
     extends StateNotifier<CursorPaginationBase> {
   final U repository;
+  final pagintaionThrottle = Throttle(
+    const Duration(seconds: 1),
+    initialValue: _PagintaionInfo(),
+    checkEquality: false,
+  );
 
   PaginationProvider({
     required this.repository,
@@ -21,6 +42,9 @@ class PaginationProvider<T extends IModelWithId,
         //* paginate 함수 실행 (데이터 초기 패칭)
         super(CursorPaginationLoading()) {
     paginate();
+    pagintaionThrottle.values.listen((state) {
+      _throttlePaginate(state);
+    });
   }
 
   Future<void> paginate({
@@ -32,6 +56,21 @@ class PaginationProvider<T extends IModelWithId,
     // 강제 새로고침
     bool forceRefetch = false,
   }) async {
+    pagintaionThrottle.setValue(_PagintaionInfo(
+      fetchCount: fetchCount,
+      fetchMore: fetchMore,
+      forceRefetch: forceRefetch,
+    ));
+  }
+
+  _throttlePaginate(_PagintaionInfo info) async {
+    final int fetchCount = info.fetchCount;
+    // 추가로 가져올 데이터가 있는지
+    // true: 추가로 데이터 가져오기
+    // false: 새로고침
+    final bool fetchMore = info.fetchMore;
+    // 강제 새로고침
+    final bool forceRefetch = info.forceRefetch;
     try {
       // 5가지 상태의 가능성
       // State 의 상태
