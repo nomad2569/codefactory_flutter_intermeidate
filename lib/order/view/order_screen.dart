@@ -16,7 +16,10 @@ class OrderScreen extends ConsumerWidget {
     return DefaultLayout(
       child: PaginationListView<OrderModel>(
         provider: orderProvider,
-        itemBuilder: <OrderModel>(_, index, item) => OrderCard(order: item),
+        itemBuilder: <OrderModel>(_, index, item) => OrderCard(
+          order: item,
+          heroKey: item.restaurant.id,
+        ),
       ),
     );
   }

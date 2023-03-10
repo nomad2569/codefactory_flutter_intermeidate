@@ -1,4 +1,5 @@
 import 'package:codefactory_intermediate/common/const/colors.dart';
+import 'package:codefactory_intermediate/order/view/order_screen.dart';
 import 'package:codefactory_intermediate/restaurant/model/restaurant_detail_model.dart';
 import 'package:codefactory_intermediate/user/provider/basket_provider.dart';
 import 'package:codefactory_intermediate/user/view/basket_screen.dart';
@@ -59,7 +60,7 @@ class ProductCard extends ConsumerWidget {
                         fontSize: 14,
                       ),
                     ),
-                    Text("\$${product.price}",
+                    Text("${product.price} 원",
                         textAlign: TextAlign.right,
                         style: TextStyle(
                           color: PRIMARY_COLOR,
@@ -127,7 +128,7 @@ class _Footer extends StatelessWidget {
       children: [
         Expanded(
           child: Text(
-            '총액 \$$total',
+            '총액 $total 원',
             style: TextStyle(
               color: PRIMARY_COLOR,
               fontWeight: FontWeight.w600,
