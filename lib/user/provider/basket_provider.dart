@@ -21,7 +21,7 @@ final basketProvider =
 class BasketProvider extends StateNotifier<List<BasketItemModel>> {
   final UserMeRepository repository;
   final Debouncer orderDebounce = Debouncer(
-    Duration(seconds: 3),
+    Duration(seconds: 1),
     initialValue: null,
     checkEquality: false,
   );
