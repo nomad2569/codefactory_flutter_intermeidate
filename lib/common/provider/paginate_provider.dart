@@ -41,7 +41,10 @@ class PaginationProvider<T extends IModelWithId,
         //* instance 생성 시, 초기 상태를 `CursorPaginationLoading` 으로 설정
         //* paginate 함수 실행 (데이터 초기 패칭)
         super(CursorPaginationLoading()) {
+    // 생성 하자마자 pagintae 첫 실행
     paginate();
+
+    // throttle listen 추가
     pagintaionThrottle.values.listen((state) {
       _throttlePaginate(state);
     });
@@ -56,6 +59,8 @@ class PaginationProvider<T extends IModelWithId,
     // 강제 새로고침
     bool forceRefetch = false,
   }) async {
+    // paginate 요청이 들어오면 _throttlePaginate 실행하기 위해
+    // 현재 throttle 의 value 를 들어온 parmas 들로 넣어줌
     pagintaionThrottle.setValue(_PagintaionInfo(
       fetchCount: fetchCount,
       fetchMore: fetchMore,

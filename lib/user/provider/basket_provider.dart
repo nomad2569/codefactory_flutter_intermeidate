@@ -3,6 +3,7 @@ import 'package:codefactory_intermediate/restaurant/model/restaurant_detail_mode
 import 'package:codefactory_intermediate/user/model/basket_item_model.dart';
 import 'package:codefactory_intermediate/user/model/patch_basket_body.dart';
 import 'package:codefactory_intermediate/user/repository/user_me_repository.dart';
+import 'package:debounce_throttle/debounce_throttle.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:collection/collection.dart';
 
@@ -19,11 +20,21 @@ final basketProvider =
 
 class BasketProvider extends StateNotifier<List<BasketItemModel>> {
   final UserMeRepository repository;
+  final Debouncer orderDebounce = Debouncer(
+    Duration(seconds: 3),
+    initialValue: null,
+    checkEquality: false,
+  );
 
   BasketProvider({
     required this.repository,
-  }) : super([]);
-
+  }) : super(
+          [],
+        ) {
+    orderDebounce.values.listen((state) {
+      patchBasket();
+    });
+  }
   Future<void> patchBasket() async {
     await repository.patchBasket(
       body: PatchBasketBody(
@@ -76,7 +87,7 @@ class BasketProvider extends StateNotifier<List<BasketItemModel>> {
 
     // Optimistic Response (긍정적 응답)
     // 응답이 성공할거라고 가정하고 상태를 먼저 업데이트함
-    await patchBasket();
+    orderDebounce.setValue(null);
   }
 
   Future<void> removeFromBasket({
@@ -117,6 +128,6 @@ class BasketProvider extends StateNotifier<List<BasketItemModel>> {
           .toList();
     }
 
-    await patchBasket();
+    orderDebounce.setValue(null);
   }
 }
