@@ -1,5 +1,6 @@
 import 'package:codefactory_intermediate/common/view/root_tab.dart';
 import 'package:codefactory_intermediate/common/view/splash_screen.dart';
+import 'package:codefactory_intermediate/order/view/order_screen.dart';
 import 'package:codefactory_intermediate/restaurant/view/restaurant_detail_screen.dart';
 import 'package:codefactory_intermediate/user/model/user_model.dart';
 import 'package:codefactory_intermediate/user/provider/user_me_provider.dart';
@@ -48,6 +49,11 @@ class AuthProvider extends ChangeNotifier {
           path: '/basket',
           name: BasketScreen.routeName,
           builder: (_, __) => BasketScreen(),
+        ),
+        GoRoute(
+          path: '/order-done',
+          name: OrderScreen.routeName,
+          builder: (_, __) => OrderScreen(),
         ),
         GoRoute(
           path: '/splash',

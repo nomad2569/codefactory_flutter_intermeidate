@@ -15,7 +15,9 @@ final dioProvider = Provider((ref) {
   dio.interceptors.add(
     CustomInterceptor(storage: storage, ref: ref),
   );
-  dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
+
+  // * 더 높은 레벨의 로깅
+  // dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
 
   return dio;
 });

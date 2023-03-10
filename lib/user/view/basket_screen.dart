@@ -1,11 +1,18 @@
+import 'dart:developer';
+
 import 'package:codefactory_intermediate/common/const/colors.dart';
 import 'package:codefactory_intermediate/common/layout/default_layout.dart';
+import 'package:codefactory_intermediate/common/view/root_tab.dart';
+import 'package:codefactory_intermediate/order/provider/order_provider.dart';
+import 'package:codefactory_intermediate/order/view/order_screen.dart';
 import 'package:codefactory_intermediate/product/component/product_card.dart';
 import 'package:codefactory_intermediate/user/provider/basket_provider.dart';
+import 'package:codefactory_intermediate/user/view/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class BasketScreen extends ConsumerWidget {
@@ -113,7 +120,16 @@ class BasketScreen extends ConsumerWidget {
                     // `ElevatedButton` 길이 최대
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        final resp =
+                            await ref.read(orderProvider.notifier).postOrders();
+
+                        // 결제 호출이 실패했다면
+                        if (resp) {
+                          context.go('/error');
+                        }
+                        context.goNamed(RootTab.routeName);
+                      },
                       // `ElevatedButton` 스타일 설정
                       style: ElevatedButton.styleFrom(
                         primary: PRIMARY_COLOR,

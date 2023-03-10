@@ -1,5 +1,6 @@
 import 'package:codefactory_intermediate/common/const/colors.dart';
 import 'package:codefactory_intermediate/common/layout/default_layout.dart';
+import 'package:codefactory_intermediate/order/view/order_screen.dart';
 import 'package:codefactory_intermediate/product/screen/product_tab.dart';
 import 'package:codefactory_intermediate/restaurant/view/restaurant_screen.dart';
 import 'package:codefactory_intermediate/user/view/profile_screen.dart';
@@ -47,7 +48,7 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
-      title: '홈 화면',
+      title: '배달의 민족',
       child: TabBarView(
         // * TabBar 가로 스크롤 조정 가능
         physics: NeverScrollableScrollPhysics(),
@@ -55,7 +56,7 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
         children: [
           RestaurantScreen(),
           ProductTab(),
-          Center(child: Text('주문')),
+          OrderScreen(),
           ProfileScreen(),
         ],
       ),
